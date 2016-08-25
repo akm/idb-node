@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-meta/iron-meta.html">
+<link rel="import" href="idb-database.html">
+<link rel="import" href="idb-object-store.html">
 
 <dom-module id="idb-node">
   <style>
@@ -7,6 +8,11 @@
       display: none;
     }
   </style>
+  <template>
+    <idb-database id="database" name="[[databaseName]]" version="[[version]]">
+      <idb-object-store id="store" name="[[objectStore]]" key-path="[[keyPath]]"></idb-object-store>
+    </idb-database>
+  </template>
 </dom-module>
 <script>
   Polymer({
@@ -24,53 +30,38 @@
       keyPath: {
         type: String,
         value: ''
-      },
-      db: {
-        type: Object,
-        value: {}
-      },
-      dbReady: {
-        type: Boolean,
-        value: false
-      },
-      isReady: {
-        type: Object,
-        value: null
-      },
-      metaName: {
-        type: String,
-        value: ''
       }
-    },
-    detached: function() {
-    },
-    ready: function() {
     },
     /**
      * Use database with given name if already opened. Otherwise, open one.
      */
     openDatabase: function() {
+      this.$.database.open();
     },
     /**
      * Deletes database with given name
      */
     deleteDatabase: function() {
+      this.$.database.delete();
     },
     /**
      * Creates an object store if it doesn't exist
      */
     createObjectStore: function() {
+      this.$.store.create();
     },
     /**
      * Deletes an object store if exists
      */
     deleteObjectStore: function() {
+      this.$.store.delete();
     },
     /**
      * Returns promise that contains IndexedDB transaction
      * @return {Promise} Promise with idb transaction
      */
     transaction: function() {
+      return this.$.store.transaction();
     },
     /**
      * Puts a new object into the store
@@ -78,12 +69,15 @@
      * @return {Promise}     Promise with a result
      */
     put: function(item) {
+      return this.$.store.put(item);
     },
     /**
      * Puts an array of objects into the store
      * @param {Array<Object>} items An array of objects to put into the store
+     * @return {Promise}     Promise with result
      */
     putBulk: function(items) {
+      return this.$.store.putBulk(items);
     },
     /**
      * Gets an item that matches given key
@@ -91,6 +85,7 @@
      * @return {Promise}    Promise with a result
      */
     get: function(key) {
+      return this.$.store.get(key);
     },
     /**
      * Deletes an item that mactches given key
@@ -98,16 +93,21 @@
      * @return {Promise}    Promise with a result
      */
     delete: function(key) {
+      return this.$.store.delete(key);
     },
     /**
      * Gets all items in the store
+     * @return {Promise}     Promise with result
      */
     getAll: function() {
+      return this.$.store.getAll();
     },
     /**
      * Delets all items in the store
+     * @return {Promise}     Promise with result
      */
     deleteAll: function() {
+      return this.$.store.deleteAll();
     }
   });
 </script>
