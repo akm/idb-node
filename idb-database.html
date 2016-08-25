@@ -106,7 +106,7 @@
           for(var i=0; i< that.objectStores.length; i++) {
             // TODO: Should we delete existing stores upon upgrade?
             // Create object stores if they don't exist
-            that.objectStores[i].create();
+            that.objectStores[i].createObjectStore();
           }
         };
       });
