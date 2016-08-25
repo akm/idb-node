@@ -6,6 +6,9 @@
       display: none;
     }
   </style>
+  <template>
+    <content></content>
+  </template>
 </dom-module>
 <script>
   // Cache connetions to open database
@@ -58,6 +61,12 @@
       }, function() {
         that.fire('idb-error');
       });
+    },
+    attached: function() {
+      var objectStores = Polymer.dom(this).querySelectorAll("idb-object-store");
+      for(var i=0; i< objectStores.length; i++) {
+        objectStores[i].database = this;
+      }
     },
     /**
      * Use database with given name if already opened. Otherwise, open one.
