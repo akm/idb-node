@@ -8,8 +8,9 @@
   <body>
     <idb-database id="db" name="idb-node-sample" version="1">
       <idb-object-store id="db-bookmarks" name="bookmarks" key-path="url"></idb-object-store>
+      <idb-object-store id="db-specs"     name="specs"     key-path="name"></idb-object-store>
     </idb-database>
-    <template is="dom-bind" id="t">
+    <template is="dom-bind" id="t1">
       <table>
         <thead>
           <tr>
@@ -25,6 +26,22 @@
         </tbody>
       </table>
     </template>
+    <template is="dom-bind" id="t2">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th><th>Url</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template is="dom-repeat" items="{{table}}">
+          <tr>
+            <td>[[item.name]]</td><td>[[item.url]]</td>
+          </tr>
+          </template>
+        </tbody>
+      </table>
+    </template>
     <script>
       var idb = document.querySelector('idb-database');
       idb.addEventListener('idb-ready', function() {
@@ -32,7 +49,7 @@
 
         var bookmarks = document.querySelector('#db-bookmarks');
         bookmarks.getAll().then(function(data) {
-          document.querySelector('#t').table = data;
+          document.querySelector('#t1').table = data;
         });
 
         // Bulk input of initial data
@@ -70,12 +87,39 @@
             "url":"https://developer.android.com/design/patterns/app-structure.html"
           }
         ]).then(function() {
-          console.log('initial data saved');
+          console.log('bookmarks saved');
         });
 
         // Getting data
         bookmarks.get('https://www.polymer-project.org/docs/elements/material.html').then(function(item) {
           console.log('got data with a key of "https://www.polymer-project.org/docs/elements/material.html"', item);
+        });
+
+        var specs = document.querySelector('#db-specs');
+        specs.getAll().then(function(data) {
+          document.querySelector('#t2').table = data;
+        });
+
+        // Bulk input of initial data
+        specs.putBulk([
+          {
+            "name":"Custom Elements",
+            "url":"http://w3c.github.io/webcomponents/spec/custom/"
+          },
+          {
+            "name":"HTML Imports",
+            "url":"http://w3c.github.io/webcomponents/spec/imports/"
+          },
+          {
+            "name":"Templates",
+            "url":"https://html.spec.whatwg.org/multipage/scripting.html#the-template-element"
+          },
+          {
+            "name":"Shadow DOM",
+            "url":"http://w3c.github.io/webcomponents/spec/shadow/"
+          }
+        ]).then(function() {
+          console.log('spec data saved');
         });
 
       });
