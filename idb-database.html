@@ -111,6 +111,48 @@
       var req = window.indexedDB.deleteDatabase(this.name);
       this.db = undefined;
       delete database[this.name];
-    }
+    },
+    /**
+     * Creates an object store if it doesn't exist
+     * @param  {Object} name A object store name to create
+     * @param  {String} keyPath The key path of object store to create
+     */
+    createObjectStore: function(name, keyPath) {
+      // Does the object store exist?
+      if (!this.db.objectStoreNames.contains(name)) {
+        var options = null;
+        // If `key-path` is configured, set it as a key
+        if (keyPath) {
+          options = {keyPath: keyPath};
+        }
+        // Create the object store
+        this.db.createObjectStore(name, options);
+      }
+    },
+    /**
+     * Deletes an object store if exists
+     * @param  {Object} name A object store name to delete
+     */
+    deleteObjectStore: function(name) {
+      // Does the object store exist?
+      if (this.db.objectStoreNames.contains(name)) {
+        // Delete the object store
+        this.db.deleteObjectStore(name);
+      }
+    },
+    /**
+     * Returns promise that contains IndexedDB transaction
+     * @param  {Object} name A object store name for transaction
+     * @return {Promise} Promise with idb transaction
+     */
+    transaction: function(name) {
+      var that = this;
+      return new Promise(function(resolve, reject) {
+        that.isReady.then(function() {
+          // Return a transaction
+          resolve(that.db.transaction(name, 'readwrite'));
+        });
+      });
+    },
   });
 </script>

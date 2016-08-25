@@ -35,39 +35,20 @@
      * Creates an object store if it doesn't exist
      */
     createObjectStore: function() {
-      // Does the object store exist?
-      if (!this.db.objectStoreNames.contains(this['name'])) {
-        var keyPath = null;
-        // If `key-path` is configured, set it as a key
-        if (this['keyPath']) {
-          keyPath = {keyPath: this['keyPath']};
-        }
-        // Create the object store
-        this.db.createObjectStore(this['name'], keyPath);
-      }
+      this.database.createObjectStore(this['name'], this['keyPath']);
     },
     /**
      * Deletes an object store if exists
      */
     deleteObjectStore: function() {
-      // Does the object store exist?
-      if (this.db.objectStoreNames.contains(this['name'])) {
-        // Delete the object store
-        this.db.deleteObjectStore(this['name']);
-      }
+      this.database.deleteObjectStore(this['name']);
     },
     /**
      * Returns promise that contains IndexedDB transaction
      * @return {Promise} Promise with idb transaction
      */
     transaction: function() {
-      var that = this;
-      return new Promise(function(resolve, reject) {
-        that.isReady.then(function() {
-          // Return a transaction
-          resolve(that.db.transaction(that['name'], 'readwrite'));
-        });
-      });
+      return this.database.transaction(this['name']);
     },
     /**
      * Puts a new object into the store
