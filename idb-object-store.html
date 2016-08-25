@@ -46,13 +46,13 @@
     /**
      * Creates an object store if it doesn't exist
      */
-    createObjectStore: function() {
+    create: function() {
       this.database.createObjectStore(this['name'], this['keyPath']);
     },
     /**
      * Deletes an object store if exists
      */
-    deleteObjectStore: function() {
+    delete: function() {
       this.database.deleteObjectStore(this['name']);
     },
     /**

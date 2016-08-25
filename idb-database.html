@@ -62,7 +62,7 @@
       }
 
       // Open the database
-      this.openDatabase();
+      this.open();
       this.isReady.then(function() {
         that.dbReady = true;
         that.fire('idb-ready');
@@ -73,7 +73,7 @@
     /**
      * Use database with given name if already opened. Otherwise, open one.
      */
-    openDatabase: function() {
+    open: function() {
       var that = this;
       this.isReady = new Promise(function(resolve, reject) {
         // If the database is already open, use it
@@ -106,7 +106,7 @@
           for(var i=0; i< that.objectStores.length; i++) {
             // TODO: Should we delete existing stores upon upgrade?
             // Create object stores if they don't exist
-            that.objectStores[i].createObjectStore();
+            that.objectStores[i].create();
           }
         };
       });
@@ -114,7 +114,7 @@
     /**
      * Deletes database with given name
      */
-    deleteDatabase: function() {
+    delete: function() {
       // Delete the database
       var req = window.indexedDB.deleteDatabase(this.name);
       this.db = undefined;
