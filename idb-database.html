@@ -42,8 +42,6 @@
       this.db.close();
     },
     ready: function() {
-      var that = this;
-
       // Is indexedDB available?
       if (!window.indexedDB) {
         console.error('idb not available on this browser');
@@ -56,10 +54,12 @@
         return;
       }
 
-      this.objectStores = Polymer.dom(that).querySelectorAll("idb-object-store");
+      this.objectStores = Polymer.dom(this).querySelectorAll("idb-object-store");
       for(var i=0; i< this.objectStores.length; i++) {
-         this.objectStores[i].database = that;
+         this.objectStores[i].database = this;
       }
+
+      var that = this;
 
       // Open the database
       this.open();
