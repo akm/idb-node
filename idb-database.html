@@ -15,7 +15,7 @@
   Polymer({
     is: 'idb-database',
     properties: {
-      databaseName: {
+      name: {
         type: String,
         value: ''
       },
@@ -46,13 +46,13 @@
       }
 
       // Check if attributes are properly set
-      if (!this.databaseName || !this.version || !this['objectStore']) {
+      if (!this.name || !this.version || !this['objectStore']) {
         console.error('You need to set `database-name`, `version` and `object-store` to enable `idb-database` element.');
         return;
       }
 
       // Register to iron-meta
-      this.metaName = this.databaseName + '-' + this.objectStore;
+      this.metaName = this.name + '-' + this.objectStore;
       new Polymer.IronMeta({type: 'idb', key: this.metaName, value: this});
 
       // Open the database
@@ -71,17 +71,17 @@
       var that = this;
       this.isReady = new Promise(function(resolve, reject) {
         // If the database is already open, use it
-        if (database[that.databaseName]) {
-          that.db = database[that.databaseName];
+        if (database[that.name]) {
+          that.db = database[that.name];
           console.log('idb already open');
           resolve();
         }
 
         // Otherwise, open it
-        var req = window.indexedDB.open(that.databaseName, that.version);
+        var req = window.indexedDB.open(that.name, that.version);
         req.onsuccess = function(e) {
           that.db = e.target.result;
-          database[that.databaseName] = that.db;
+          database[that.name] = that.db;
           resolve();
         };
         req.onblocked = function(e) {
@@ -96,7 +96,7 @@
         };
         req.onupgradeneeded = function(e) {
           that.db = e.target.result;
-          database[that.databaseName] = that.db;
+          database[that.name] = that.db;
           // TODO: Should we delete existing stores upon upgrade?
           // Create object stores if they don't exist
           that.createObjectStore();
@@ -108,9 +108,9 @@
      */
     deleteDatabase: function() {
       // Delete the database
-      var req = window.indexedDB.deleteDatabase(this.databaseName);
+      var req = window.indexedDB.deleteDatabase(this.name);
       this.db = undefined;
-      delete database[this.databaseName];
+      delete database[this.name];
     }
   });
 </script>
