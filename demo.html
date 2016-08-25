@@ -2,10 +2,13 @@
   <head>
     <title>Indexed DB Example</title>
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="idb-node.html">
+    <link rel="import" href="idb-database.html">
+    <link rel="import" href="idb-object-store.html">
   </head>
   <body>
-    <idb-node id="db" database-name="idb-node-sample" version="1" object-store="bookmarks" key-path="url"></idb-node>
+    <idb-database id="db" name="idb-node-sample" version="1">
+      <idb-object-store id="db-bookmarks" name="bookmarks" key-path="url"></idb-object-store>
+    </idb-database>
     <template is="dom-bind" id="t">
       <table>
         <thead>
@@ -23,17 +26,17 @@
       </table>
     </template>
     <script>
-      var idb = document.querySelector('idb-node');
+      var idb = document.querySelector('idb-database');
       idb.addEventListener('idb-ready', function() {
         console.log('database ready');
 
-        var db = document.querySelector('#db');
-        db.getAll().then(function(data) {
+        var bookmarks = document.querySelector('#db-bookmarks');
+        bookmarks.getAll().then(function(data) {
           document.querySelector('#t').table = data;
         });
 
         // Bulk input of initial data
-        idb.putBulk([
+        bookmarks.putBulk([
           {
             "title":"Expressions - Polymer",
             "url":"https://www.polymer-project.org/docs/polymer/expressions.html"
@@ -71,7 +74,7 @@
         });
 
         // Getting data
-        idb.get('https://www.polymer-project.org/docs/elements/material.html').then(function(item) {
+        bookmarks.get('https://www.polymer-project.org/docs/elements/material.html').then(function(item) {
           console.log('got data with a key of "https://www.polymer-project.org/docs/elements/material.html"', item);
         });
 
