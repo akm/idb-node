@@ -33,7 +33,10 @@
       isReady: {
         type: Object,
         value: null
-      }
+      },
+      objectStores: {
+        type: Array
+      },
     },
     detached: function() {
       this.db.close();
@@ -53,6 +56,11 @@
         return;
       }
 
+      this.objectStores = Polymer.dom(that).querySelectorAll("idb-object-store");
+      for(var i=0; i< this.objectStores.length; i++) {
+         this.objectStores[i].database = that;
+      }
+
       // Open the database
       this.openDatabase();
       this.isReady.then(function() {
@@ -61,12 +69,6 @@
       }, function() {
         that.fire('idb-error');
       });
-    },
-    attached: function() {
-      var objectStores = Polymer.dom(this).querySelectorAll("idb-object-store");
-      for(var i=0; i< objectStores.length; i++) {
-        objectStores[i].database = this;
-      }
     },
     /**
      * Use database with given name if already opened. Otherwise, open one.
@@ -101,9 +103,11 @@
         req.onupgradeneeded = function(e) {
           that.db = e.target.result;
           database[that.name] = that.db;
-          // TODO: Should we delete existing stores upon upgrade?
-          // Create object stores if they don't exist
-          that.createObjectStore();
+          for(var i=0; i< that.objectStores.length; i++) {
+            // TODO: Should we delete existing stores upon upgrade?
+            // Create object stores if they don't exist
+            that.objectStores[i].createObjectStore();
+          }
         };
       });
     },
