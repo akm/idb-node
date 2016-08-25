@@ -1,7 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-meta/iron-meta.html">
 
-<dom-module id="idb-node">
+<dom-module id="idb-database">
   <style>
     :host {
       display: none;
@@ -13,7 +13,7 @@
   var database = {};
 
   Polymer({
-    is: 'idb-node',
+    is: 'idb-database',
     properties: {
       databaseName: {
         type: String,
@@ -47,7 +47,7 @@
 
       // Check if attributes are properly set
       if (!this.databaseName || !this.version || !this['objectStore']) {
-        console.error('You need to set `database-name`, `version` and `object-store` to enable `idb-node` element.');
+        console.error('You need to set `database-name`, `version` and `object-store` to enable `idb-database` element.');
         return;
       }
 
