@@ -18,7 +18,7 @@
       database: {
         type: Object
       },
-      objectStore: {
+      name: {
         type: Object,
         value: ''
       },
@@ -36,14 +36,14 @@
      */
     createObjectStore: function() {
       // Does the object store exist?
-      if (!this.db.objectStoreNames.contains(this['objectStore'])) {
+      if (!this.db.objectStoreNames.contains(this['name'])) {
         var keyPath = null;
         // If `key-path` is configured, set it as a key
         if (this['keyPath']) {
           keyPath = {keyPath: this['keyPath']};
         }
         // Create the object store
-        this.db.createObjectStore(this['objectStore'], keyPath);
+        this.db.createObjectStore(this['name'], keyPath);
       }
     },
     /**
@@ -51,9 +51,9 @@
      */
     deleteObjectStore: function() {
       // Does the object store exist?
-      if (this.db.objectStoreNames.contains(this['objectStore'])) {
+      if (this.db.objectStoreNames.contains(this['name'])) {
         // Delete the object store
-        this.db.deleteObjectStore(this['objectStore']);
+        this.db.deleteObjectStore(this['name']);
       }
     },
     /**
@@ -65,7 +65,7 @@
       return new Promise(function(resolve, reject) {
         that.isReady.then(function() {
           // Return a transaction
-          resolve(that.db.transaction(that['objectStore'], 'readwrite'));
+          resolve(that.db.transaction(that['name'], 'readwrite'));
         });
       });
     },
@@ -79,7 +79,7 @@
       return new Promise(function(resolve, reject) {
         that.transaction().then(function(trans) {
           // Put an object
-          var req = trans.objectStore(that['objectStore']).put(item);
+          var req = trans.objectStore(that['name']).put(item);
           req.onsuccess = function(e) {
             resolve(e.target.result);
           }
@@ -96,7 +96,7 @@
       var that = this;
       return new Promise(function(resolve, reject) {
         that.transaction().then(function(trans) {
-          var store = trans.objectStore(that['objectStore']);
+          var store = trans.objectStore(that['name']);
           // Put objects in loop
           for (var i = 0; i < items.length; i++) {
             store.put(items[i]);
@@ -116,7 +116,7 @@
       return new Promise(function(resolve, reject) {
         that.transaction().then(function(trans) {
           // Get an object with a key
-          var req = trans.objectStore(that['objectStore']).get(key);
+          var req = trans.objectStore(that['name']).get(key);
           req.onsuccess = function(e) {
             resolve(e.target.result);
           }
@@ -135,7 +135,7 @@
       return new Promise(function(resolve, reject) {
         that.transaction().then(function(trans) {
           // Delete an object with a key
-          var req = trans.objectStore(that['objectStore']).delete(key);
+          var req = trans.objectStore(that['name']).delete(key);
           req.onsuccess = function(e) {
             resolve(e.target.result);
           }
@@ -153,7 +153,7 @@
         that.transaction().then(function(trans) {
           var table = [];
           // Open a cursor
-          var req = trans.objectStore(that['objectStore']).openCursor();
+          var req = trans.objectStore(that['name']).openCursor();
           req.onsuccess = function(e) {
             // Loop through cursor to obtain results
             var cursor = e.target.result;
@@ -178,7 +178,7 @@
       var that = this;
       return new Promise(function(resolve, reject) {
         that.transaction().then(function(trans) {
-          var store = trans.objectStore(that['objectStore']);
+          var store = trans.objectStore(that['name']);
           // Open a cursor
           var req = store.openCursor();
           req.onsuccess = function(e) {
