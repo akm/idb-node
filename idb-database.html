@@ -1,5 +1,4 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-meta/iron-meta.html">
 
 <dom-module id="idb-database">
   <style>
@@ -46,14 +45,10 @@
       }
 
       // Check if attributes are properly set
-      if (!this.name || !this.version || !this['objectStore']) {
-        console.error('You need to set `database-name`, `version` and `object-store` to enable `idb-database` element.');
+      if (!this.name || !this.version) {
+        console.error('You need to set `name` and `version` to enable `idb-database` element.');
         return;
       }
-
-      // Register to iron-meta
-      this.metaName = this.name + '-' + this.objectStore;
-      new Polymer.IronMeta({type: 'idb', key: this.metaName, value: this});
 
       // Open the database
       this.openDatabase();

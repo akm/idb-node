@@ -31,6 +31,17 @@
         value: ''
       }
     },
+    ready: function() {
+      // Check if attributes are properly set
+      if (!this['name']) {
+        console.error('You need to set `name` to enable `idb-object-store` element.');
+        return;
+      }
+
+      // Register to iron-meta
+      this.metaName = this.database.name + '-' + this.name;
+      new Polymer.IronMeta({type: 'idb', key: this.metaName, value: this});
+    },
     /**
      * Creates an object store if it doesn't exist
      */
